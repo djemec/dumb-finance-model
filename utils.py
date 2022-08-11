@@ -27,8 +27,9 @@ TAX = 0.2
 DEFAULT_MODEL = 'S&P500'
 MODELS = {'S&P500':'^GSPC','NASDAQ':'^IXIC','DOW':'^DJI','Tres10y':'^TNX','Coke':'KO','GE':'GE','IBM':'IBM'}
 DATA_LOAD_STATE = st.text('')
+DEFAULT_LEVERAGE = 1.0
 
-def prep_data(source, inflation):
+def prep_data(source, inflation, leverage):
     # clear DF
     global result_df
     result_df = pd.DataFrame(columns = ['start_date','principle','monthly','months_survive','survive'])
@@ -66,7 +67,7 @@ def prep_data(source, inflation):
         # update percent change
         p_close = df.at[i-1,'Close']
         c_close = df.at[i,'Close']
-        df.at[i,'change'] = (c_close - p_close)/p_close
+        df.at[i,'change'] = ((c_close - p_close)/p_close) * leverage
     print('prep done')
     return df
 
@@ -138,9 +139,9 @@ def seek_year(sdi, p_min, p_max, step, withdrawal, min_amount_tol, baseline_df, 
 def run_model(model = MODELS[DEFAULT_MODEL], years=MAX_YEARS,
               min_amount_tol=MIN_AMOUNT_TOLERABLE, tax=TAX,
               monthly_min=MONTHLY_MIN, monthly_max=MONTHLY_MAX, inflation= INFLATION_ON,
-              dls=DATA_LOAD_STATE):
+              leverage=DEFAULT_LEVERAGE, dls=DATA_LOAD_STATE):
     # runs the modeling
-    model_df = prep_data(model, inflation)
+    model_df = prep_data(model, inflation, leverage)
     lsi = int((len(model_df)- years*12)/12)
     for s in range(lsi + 1):
         s_date_i = s*12
