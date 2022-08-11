@@ -2,6 +2,8 @@
 
 This is not financial advice, it's just a really dumb simulation of money if it was invested at different time point in a certain stock. Nothing in this app constitutes professional and/or financial advice. If you base your decisions off of this reevaluate your financial choices.
 
+If you'd like to play with this model and waste some time, check it out on [huggingfaces](https://huggingface.co/spaces/djemec/dumb-finance-model)
+
 
 ## What this actually does
 Based on the inputs, this pulls as much data as it can from yahoo finance for the given stock ticker you pick. It then starts simulating an investment for each year available for the duration of the years invested you pick until it runs out of years (e.g. if you pick 40 years, and your stock has data to 1978 it runs a simulation for 1978, 1979, 1980, and 1981). 
