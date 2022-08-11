@@ -14,7 +14,7 @@ st.markdown('_Nothing in this app constitutes professional and/or financial advi
 col1, col2, col3 = st.columns(3)
 with col1:
     stock = st.selectbox('Which Stock do you want to model', list(MODELS.keys()), index=0)
-    years = st.number_input('Years you want to live off the money', min_value=5, max_value=MAX_YEARS, value=MAX_YEARS)
+    years = st.number_input('Years you want to live off the money', min_value=5, max_value=60, value=MAX_YEARS)
 
 with col2:
     min_tol = st.number_input('Minimum tolerable amount in bank$', min_value=0, max_value=10000000, 
@@ -41,12 +41,14 @@ if st.button('Click to run'):
             for {years} years at a long term capital gains tax of {tax_rate}, with inflation {inflation} while \
             maintaining a min bank balance of {min_tol}. This assumes the principle is fully invested in {stock}.'
     st.markdown(desc)
-    tab1, tab2 = st.tabs(['Chart','Table'])
 
-    with tab1:
+# commenting out tabs since it requires v1.11 which isnt supported in HF
+#    tab1, tab2 = st.tabs(['Chart','Table'])
+
+#    with tab1:
         
-        fig = plot_stats(sdf)
-        st.pyplot(fig)
+    fig = plot_stats(sdf)
+    st.pyplot(fig)
 
-    with tab2:
-        st.table(data=sdf_stats)
+#    with tab2:
+    st.table(data=sdf_stats)
