@@ -28,7 +28,11 @@ DEFAULT_MODEL = 'S&P500'
 MODELS = {'S&P500':'^GSPC','NASDAQ':'^IXIC','DOW':'^DJI','Tres10y':'^TNX','Coke':'KO','GE':'GE','IBM':'IBM'}
 DATA_LOAD_STATE = st.text('')
 
-def prep_data(source=MODELS[DEFAULT_MODEL], inflation=INFLATION_ON ):
+def prep_data(source, inflation):
+    # clear DF
+    global result_df
+    result_df = pd.DataFrame(columns = ['start_date','principle','monthly','months_survive','survive'])
+    
     # setups initial frame with rates and cpi
     
     print('prep started')
@@ -66,7 +70,7 @@ def prep_data(source=MODELS[DEFAULT_MODEL], inflation=INFLATION_ON ):
     print('prep done')
     return df
 
-def model_year(prin, start_date_index, withdrawal, min_amount_tol, df, tax=TAX, years=MAX_YEARS):
+def model_year(prin, start_date_index, withdrawal, min_amount_tol, df, tax, years):
     # models a specific year
     
     global result_df
@@ -129,8 +133,9 @@ def seek_year(sdi, p_min, p_max, step, withdrawal, min_amount_tol, baseline_df, 
         # exists when succeeds
         if not failed:
             break
-            
-def run_model(model = MODELS['S&P500'], years=MAX_YEARS,
+
+## main function for modeling
+def run_model(model = MODELS[DEFAULT_MODEL], years=MAX_YEARS,
               min_amount_tol=MIN_AMOUNT_TOLERABLE, tax=TAX,
               monthly_min=MONTHLY_MIN, monthly_max=MONTHLY_MAX, inflation= INFLATION_ON,
               dls=DATA_LOAD_STATE):
