@@ -140,7 +140,7 @@ def run_model(model = MODELS[DEFAULT_MODEL], years=MAX_YEARS,
               monthly_min=MONTHLY_MIN, monthly_max=MONTHLY_MAX, inflation= INFLATION_ON,
               dls=DATA_LOAD_STATE):
     # runs the modeling
-    model_df = prep_data(model)
+    model_df = prep_data(model, inflation)
     lsi = int((len(model_df)- years*12)/12)
     for s in range(lsi + 1):
         s_date_i = s*12
