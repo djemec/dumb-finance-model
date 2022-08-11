@@ -7,7 +7,7 @@ from utils import MAX_YEARS, MIN_AMOUNT_TOLERABLE, INFLATION_ON, MONTHLY_MIN, MO
 
 
 st.title('Dumb Finance Model 🤑💰')
-st.markdown('_Runs a model of investing your principle in the stock you pick with the withdrawal you select._')
+st.markdown('Runs a model of investing your principle in the stock you pick with the withdrawal you select. Please keep all financial values in increments of 1000\'s for best results.')
 st.markdown('_Nothing in this app constitutes professional and/or financial advice._')
 
 # prompt box
