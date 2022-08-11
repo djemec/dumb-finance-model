@@ -67,7 +67,8 @@ def prep_data(source, inflation, leverage):
         # update percent change
         p_close = df.at[i-1,'Close']
         c_close = df.at[i,'Close']
-        df.at[i,'change'] = ((c_close - p_close)/p_close) * leverage
+        change = (((c_close - p_close)/p_close)*leverage)
+        df.at[i,'change'] = change
     print('prep done')
     return df
 
@@ -102,9 +103,7 @@ def model_year(prin, start_date_index, withdrawal, min_amount_tol, df, tax, year
         df.at[i,mnth]= c_m
         # (previous principle*(1+change)) - current monthly
         p_p = df.at[p,prcp]
-        p_c = df.at[p,'Close']
-        c_c = df.at[i,'Close']
-        change =  (c_c-p_c)/p_c
+        change = df.at[i,'change'] 
         c_p = p_p*(1+change)-(c_m/(1-tax))
         df.at[i,prcp]= c_p
         failed = (c_p <= min_amount_tol)
@@ -148,7 +147,7 @@ def run_model(model = MODELS[DEFAULT_MODEL], years=MAX_YEARS,
         year = model_df.at[s_date_i,'index'].strftime('%Y_%m_%d')
         mm = monthly_max+monthly_step
         print(f'analyzing year: {year} {s+1} of {lsi + 1}')
-        dls.text(f'progress {s+1} of {lsi + 1}')
+        #dls.text(f'progress {s+1} of {lsi + 1}')
         for mon in range(monthly_min,mm,monthly_step):
             seek_year(s_date_i, init_amount, max_amount, step, mon, min_amount_tol, model_df,tax, years)
             
