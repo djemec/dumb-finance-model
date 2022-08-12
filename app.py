@@ -7,7 +7,7 @@ from utils import MAX_YEARS, MIN_AMOUNT_TOLERABLE, INFLATION_ON, MONTHLY_MIN, MO
 
 
 st.title('Dumb Finance Model 🤑💰')
-st.markdown('Runs a model of investing your principle in the stock you pick with the withdrawal you select. Please keep all financial values in increments of 1000\'s for best results.')
+st.markdown('Runs a model of investing your principal in the stock you pick with the withdrawal you select. Please keep all financial values in increments of 1000\'s for best results.')
 st.markdown('_Nothing in this app constitutes professional and/or financial advice._')
 
 # prompt box
@@ -36,11 +36,11 @@ if st.button('Click to run'):
     data_load_state.empty()
     
     # show summary chart
-    st.subheader('Principle needed to support different monthly withdrawals')
+    st.subheader('Principal needed to support different monthly withdrawals')
     inflation = 'ON' if inflation else 'OFF'
-    desc = f'Principle needed to support monthly withdrawals from {month_min} to {month_max} \
+    desc = f'Principal needed to support monthly withdrawals from {month_min} to {month_max} \
             for {years} years at a long term capital gains tax of {tax_rate}, with inflation {inflation} while \
-            maintaining a min bank balance of {min_tol}. This assumes the principle is fully invested \
+            maintaining a min bank balance of {min_tol}. This assumes the principal is fully invested \
             in {stock} with {leverage}x leverage.'
     st.markdown(desc)
 

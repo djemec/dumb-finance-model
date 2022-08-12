@@ -16,7 +16,7 @@ step = 100000
 monthly_step = 1000
 dump_data = True
 data_source = 'yahoo'
-result_df = pd.DataFrame(columns = ['start_date','principle','monthly','months_survive','survive'])
+result_df = pd.DataFrame(columns = ['start_date','principal','monthly','months_survive','survive'])
 
 MIN_AMOUNT_TOLERABLE = 100000
 INFLATION_ON = True
@@ -32,7 +32,7 @@ DEFAULT_LEVERAGE = 1.0
 def prep_data(source, inflation, leverage):
     # clear DF
     global result_df
-    result_df = pd.DataFrame(columns = ['start_date','principle','monthly','months_survive','survive'])
+    result_df = pd.DataFrame(columns = ['start_date','principal','monthly','months_survive','survive'])
     
     # setups initial frame with rates and cpi
     
@@ -81,7 +81,7 @@ def model_year(prin, start_date_index, withdrawal, min_amount_tol, df, tax, year
     failed = False
     s_date = df.at[start_date_index,'index'].strftime('%Y_%m_%d')
     mnth = f'monthly_{s_date}_{prin}_{withdrawal}'
-    prcp = f'principle_{s_date}_{prin}_{withdrawal}'
+    prcp = f'principal_{s_date}_{prin}_{withdrawal}'
     df[mnth] = np.nan
     df[prcp] = np.nan
     k=0
@@ -101,7 +101,7 @@ def model_year(prin, start_date_index, withdrawal, min_amount_tol, df, tax, year
         c_i = df.at[i,'inflation']
         c_m = p_m*(1+c_i)
         df.at[i,mnth]= c_m
-        # (previous principle*(1+change)) - current monthly
+        # (previous principal*(1+change)) - current monthly
         p_p = df.at[p,prcp]
         change = df.at[i,'change'] 
         c_p = p_p*(1+change)-(c_m/(1-tax))
@@ -109,7 +109,7 @@ def model_year(prin, start_date_index, withdrawal, min_amount_tol, df, tax, year
         failed = (c_p <= min_amount_tol)
         if failed or i == end-1:
             res = pd.DataFrame.from_dict({'start_date': [start], 
-                                          'principle': prin, 
+                                          'principal': prin, 
                                           'monthly': withdrawal,
                                           'months_survive': [i-start_date_index], 
                                           'survive': [not failed]})
@@ -120,10 +120,10 @@ def model_year(prin, start_date_index, withdrawal, min_amount_tol, df, tax, year
     return failed
 
 def seek_year(sdi, p_min, p_max, step, withdrawal, min_amount_tol, baseline_df, tax, years):
-    # interates over a series of principles to find the lowest that makes it to the years amount
+    # interates over a series of principals to find the lowest that makes it to the years amount
     # sdi = start date index 
-    # p_min = principle min
-    # p_max = principle max
+    # p_min = principal min
+    # p_max = principal max
     # step = increase step from in to max
     
     # presumes failed state
@@ -147,7 +147,7 @@ def run_model(model = MODELS[DEFAULT_MODEL], years=MAX_YEARS,
         year = model_df.at[s_date_i,'index'].strftime('%Y_%m_%d')
         mm = monthly_max+monthly_step
         print(f'analyzing year: {year} {s+1} of {lsi + 1}')
-        #dls.text(f'progress {s+1} of {lsi + 1}')
+        dls.text(f'progress {s+1} of {lsi + 1}')
         for mon in range(monthly_min,mm,monthly_step):
             seek_year(s_date_i, init_amount, max_amount, step, mon, min_amount_tol, model_df,tax, years)
             
@@ -155,12 +155,12 @@ def return_survived_df():
     # filters and returns results and the distribution
     survive_df = result_df[result_df.survive]
     survive_df= survive_df.astype({'start_date': object, 
-                                   'principle': int, 
+                                   'principal': int, 
                                    'monthly': int, 
                                    'months_survive': int, 
                                    'survive': bool})
     
-    sdf_summary = survive_df[['principle','monthly']].groupby('monthly').describe()
+    sdf_summary = survive_df[['principal','monthly']].groupby('monthly').describe()
     sdf_summary.columns = [i[1] for i in sdf_summary.columns]
     sdf_summary = sdf_summary.drop(columns='count')
     sdf_summary.index = ['${:,}'.format(x) for x in sdf_summary.index]
@@ -171,7 +171,7 @@ def return_survived_df():
 def return_all_df():
     # filters and returns results
     all_df = result_df.astype({'start_date': object, 
-                                   'principle': int, 
+                                   'principal': int, 
                                    'monthly': int, 
                                    'months_survive': int, 
                                    'survive': bool})
@@ -179,10 +179,10 @@ def return_all_df():
 
 def plot_stats(sdf):
     x_l = 'monthly withdrawal'
-    y_l = 'principle'
+    y_l = 'principal'
 
     unique_monthly = sdf.monthly.unique()
-    data =[list(sdf[sdf['monthly'] == i].principle) for i in unique_monthly]
+    data =[list(sdf[sdf['monthly'] == i].principal) for i in unique_monthly]
     fig, ax = plt.subplots()
 
     fig.set_size_inches(10, 6)
@@ -200,10 +200,10 @@ if __name__ == '__main__':
     run_model()
     sdf, sdf_stats = return_survived_df()
     inf_text = 'Yes' if INFLATION_ON else 'No'
-    title = f'principle needed (inflation {inf_text}, min_bal {min_amount_tolerable}, years {MAX_YEARS}, model {default_model})'
+    title = f'principal needed (inflation {inf_text}, min_bal {min_amount_tolerable}, years {MAX_YEARS}, model {default_model})'
     x_l = 'monthly withdrawal'
-    y_l = 'Principle[$]'
+    y_l = 'Principal[$]'
 
-    sdf.plot.box(column=["principle"], by=['monthly'], title=title, ylabel=y_l, xlabel=x_l, figsize=(10,5))
+    sdf.plot.box(column=['principal'], by=['monthly'], title=title, ylabel=y_l, xlabel=x_l, figsize=(10,5))
     print(sdf_stats)
   
