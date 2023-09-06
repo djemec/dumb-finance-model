@@ -1,5 +1,6 @@
 import streamlit as st
 import matplotlib.pyplot as plt
+import altair
 
 
 from utils import run_model, return_survived_df, plot_stats
