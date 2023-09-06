@@ -2,3 +2,5 @@ numpy
 matplotlib
 pandas
 pandas_datareader
+yfinance
+altair==4.1.0
